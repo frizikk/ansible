@@ -3,6 +3,7 @@
   tags:
     - install
     - neovim
+
 - name: Get Packer
   ansible.builtin.git:
     repo: 'https://github.com/wbthomason/packer.nvim'
@@ -10,6 +11,7 @@
   tags:
     - install
     - neovim
+
 - name: Clone Neovim
   ansible.builtin.git:
     repo: 'https://github.com/neovim/neovim.git'
@@ -17,26 +19,37 @@
   tags:
     - install
     - neovim
+
 - name: Build neovim
   shell: "cd {{ lookup('env', 'HOME') }}/neovim && make -j 16"
   tags:
     - install
     - neovim
+
 - name: Install neovim
   become: true
   shell: "cd {{ lookup('env', 'HOME') }}/neovim && make install"
   tags:
     - install
     - neovim
+
 - name: Neovim Plugin Development 1
   become: true
   apt: name=luarocks
   tags:
     - install
     - neovim
+
 - name: Neovim Plugin Development 2 luacheck
   become: true
   shell: luarocks install luacheck
   tags:
     - install
     - neovim
+
+- name: Create symbolic link 
+  become: true
+  file:
+    src: "/usr/local/bin/nvim"
+    dest: "/usr/local/bin/vim"
+    state: link
